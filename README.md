@@ -158,7 +158,7 @@ Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twit
 Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)  
 Ayomide Ayodele-Soyebo - [Github](https://github.com/AyomideA-S) / [Twitter](https://twitter.com/shobzy17)
 
-Second part of Airbnb: Joann Vuong
+Second part of AirBnB_clone_v3: Ayomide Ayodele-Soyebo
 
 ## License
 Public Domain. No copy write protection. 
