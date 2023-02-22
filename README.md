@@ -154,8 +154,7 @@ EOF  all  create  destroy  help  quit  show  update
 No known bugs at this time. 
 
 ## Authors
-Alexa Orrico - [Github](https://github.com/alexaorrico) / [Twitter](https://twitter.com/alexa_orrico)  
-Jennifer Huang - [Github](https://github.com/jhuang10123) / [Twitter](https://twitter.com/earthtojhuang)  
+Chinwe Chukwuogor - [Github](https://github.com/kiraadaves) / [Twitter](https://twitter.com/CKiraadaves)  
 Ayomide Ayodele-Soyebo - [Github](https://github.com/AyomideA-S) / [Twitter](https://twitter.com/shobzy17)
 
 Second part of AirBnB_clone_v3: Ayomide Ayodele-Soyebo
