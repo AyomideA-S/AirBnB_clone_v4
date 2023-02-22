@@ -7,6 +7,7 @@ Routes:
 from models import storage
 from flask import Flask
 from flask import render_template
+import uuid
 
 app = Flask(__name__)
 
@@ -18,7 +19,8 @@ def hbnb():
     amenities = storage.all("Amenity")
     places = storage.all("Place")
     return render_template("0-hbnb.html",
-                           states=states, amenities=amenities, places=places)
+                           states=states, amenities=amenities, places=places,
+                           cache_id=str(uuid.uuid4()))
 
 
 @app.teardown_appcontext
