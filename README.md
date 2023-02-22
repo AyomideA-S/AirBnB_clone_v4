@@ -157,7 +157,7 @@ No known bugs at this time.
 Chinwe Chukwuogor - [Github](https://github.com/kiraadaves) / [Twitter](https://twitter.com/CKiraadaves)  
 Ayomide Ayodele-Soyebo - [Github](https://github.com/AyomideA-S) / [Twitter](https://twitter.com/shobzy17)
 
-Second part of AirBnB_clone_v3: Ayomide Ayodele-Soyebo
+Second part of AirBnB_clone_v3: Ayomide Ayodele-Soyebo and Chinwe Chukwuogor
 
 ## License
 Public Domain. No copy write protection. 
