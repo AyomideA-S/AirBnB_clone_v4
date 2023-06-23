@@ -24,11 +24,9 @@ def hbnb():
     """ HBNB is alive! """
     states = storage.all(State).values()
     states = sorted(states, key=lambda k: k.name)
-    st_ct = []
-
-    for state in states:
-        st_ct.append([state, sorted(state.cities, key=lambda k: k.name)])
-
+    st_ct = [
+        [state, sorted(state.cities, key=lambda k: k.name)] for state in states
+    ]
     amenities = storage.all(Amenity).values()
     amenities = sorted(amenities, key=lambda k: k.name)
 

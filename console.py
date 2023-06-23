@@ -77,7 +77,7 @@ class HBNBCommand(cmd.Cmd):
             return False
         if args[0] in classes:
             if len(args) > 1:
-                key = args[0] + "." + args[1]
+                key = f"{args[0]}.{args[1]}"
                 if key in models.storage.all():
                     print(models.storage.all()[key])
                 else:
@@ -94,7 +94,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif args[0] in classes:
             if len(args) > 1:
-                key = args[0] + "." + args[1]
+                key = f"{args[0]}.{args[1]}"
                 if key in models.storage.all():
                     models.storage.all().pop(key)
                     models.storage.save()
@@ -108,7 +108,6 @@ class HBNBCommand(cmd.Cmd):
     def do_all(self, arg):
         """Prints string representations of instances"""
         args = shlex.split(arg)
-        obj_list = []
         if len(args) == 0:
             obj_dict = models.storage.all()
         elif args[0] in classes:
@@ -116,8 +115,7 @@ class HBNBCommand(cmd.Cmd):
         else:
             print("** class doesn't exist **")
             return False
-        for key in obj_dict:
-            obj_list.append(str(obj_dict[key]))
+        obj_list = [str(obj_dict[key]) for key in obj_dict]
         print("[", end="")
         print(", ".join(obj_list), end="")
         print("]")
@@ -132,7 +130,7 @@ class HBNBCommand(cmd.Cmd):
             print("** class name missing **")
         elif args[0] in classes:
             if len(args) > 1:
-                k = args[0] + "." + args[1]
+                k = f"{args[0]}.{args[1]}"
                 if k in models.storage.all():
                     if len(args) > 2:
                         if len(args) > 3:

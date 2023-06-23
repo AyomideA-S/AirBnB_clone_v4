@@ -57,11 +57,8 @@ def __analyse_html(file_path):
     d = open(file_path, "rb").read()
     u = "https://validator.w3.org/nu/?out=json"
     r = requests.post(u, headers=h, data=d)
-    res = []
     messages = r.json().get('messages', [])
-    for m in messages:
-        res.append("[{}:{}] {}".format(file_path, m['lastLine'], m['message']))
-    return res
+    return [f"[{file_path}:{m['lastLine']}] {m['message']}" for m in messages]
 
 
 def __analyse_css(file_path):
@@ -71,11 +68,8 @@ def __analyse_css(file_path):
     f = {'file': (file_path, open(file_path, 'rb'), 'text/css')}
     u = "http://jigsaw.w3.org/css-validator/validator"
     r = requests.post(u, data=d, files=f)
-    res = []
     errors = r.json().get('cssvalidation', {}).get('errors', [])
-    for e in errors:
-        res.append("[{}:{}] {}".format(file_path, e['line'], e['message']))
-    return res
+    return [f"[{file_path}:{e['line']}] {e['message']}" for e in errors]
 
 
 def __analyse(file_path):
@@ -91,24 +85,20 @@ def __analyse(file_path):
 
         if len(result) > 0:
             for msg in result:
-                __print_stderr("{}\n".format(msg))
+                __print_stderr(f"{msg}\n")
                 nb_errors += 1
         else:
-            __print_stdout("{}: OK\n".format(file_path))
+            __print_stdout(f"{file_path}: OK\n")
 
     except Exception as e:
-        __print_stderr("[{}] {}\n".format(e.__class__.__name__, e))
+        __print_stderr(f"[{e.__class__.__name__}] {e}\n")
     return nb_errors
 
 
 def __files_loop():
     """Loop that analyses for each file from input arguments
     """
-    nb_errors = 0
-    for file_path in sys.argv[1:]:
-        nb_errors += __analyse(file_path)
-
-    return nb_errors
+    return sum(__analyse(file_path) for file_path in sys.argv[1:])
 
 
 if __name__ == "__main__":

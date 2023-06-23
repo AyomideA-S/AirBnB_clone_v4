@@ -29,17 +29,17 @@ class FileStorage:
     def all(self, cls=None):
         """returns the dictionary __objects"""
         if cls is not None:
-            new_dict = {}
-            for key, value in self.__objects.items():
-                if cls == value.__class__ or cls == value.__class__.__name__:
-                    new_dict[key] = value
-            return new_dict
+            return {
+                key: value
+                for key, value in self.__objects.items()
+                if cls in [value.__class__, value.__class__.__name__]
+            }
         return self.__objects
 
     def new(self, obj):
         """sets in __objects the obj with key <obj class name>.id"""
         if obj is not None:
-            key = obj.__class__.__name__ + "." + obj.id
+            key = f"{obj.__class__.__name__}.{obj.id}"
             self.__objects[key] = obj
 
     def save(self):
@@ -65,7 +65,7 @@ class FileStorage:
     def delete(self, obj=None):
         """delete obj from __objects if it’s inside"""
         if obj is not None:
-            key = obj.__class__.__name__ + '.' + obj.id
+            key = f'{obj.__class__.__name__}.{obj.id}'
             if key in self.__objects:
                 del self.__objects[key]
 
@@ -82,11 +82,7 @@ class FileStorage:
             return None
 
         all_cls = models.storage.all(cls)
-        for value in all_cls.values():
-            if (value.id == id):
-                return value
-
-        return None
+        return next((value for value in all_cls.values() if (value.id == id)), None)
 
     def count(self, cls=None):
         """
@@ -94,11 +90,8 @@ class FileStorage:
         """
         all_class = classes.values()
 
-        if not cls:
-            count = 0
-            for clas in all_class:
-                count += len(models.storage.all(clas).values())
-        else:
-            count = len(models.storage.all(cls).values())
-
-        return count
+        return (
+            sum(len(models.storage.all(clas).values()) for clas in all_class)
+            if not cls
+            else len(models.storage.all(cls).values())
+        )
