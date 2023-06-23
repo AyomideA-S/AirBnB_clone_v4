@@ -15,9 +15,9 @@ class TestBaseModelDocs(unittest.TestCase):
     """Tests to check the documentation and style of BaseModel class"""
 
     @classmethod
-    def setUpClass(self):
+    def setUpClass(cls):
         """Set up for docstring tests"""
-        self.base_funcs = inspect.getmembers(BaseModel, inspect.isfunction)
+        cls.base_funcs = inspect.getmembers(BaseModel, inspect.isfunction)
 
     def test_pep8_conformance(self):
         """Test that models/base_model.py conforms to PEP8."""
@@ -141,7 +141,7 @@ class TestBaseModel(unittest.TestCase):
     def test_str(self):
         """test that the str method has the correct output"""
         inst = BaseModel()
-        string = "[BaseModel] ({}) {}".format(inst.id, inst.__dict__)
+        string = f"[BaseModel] ({inst.id}) {inst.__dict__}"
         self.assertEqual(string, str(inst))
 
     @mock.patch('models.storage')

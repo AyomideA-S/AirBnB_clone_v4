@@ -32,11 +32,9 @@ class DBStorage:
         HBNB_MYSQL_HOST = getenv('HBNB_MYSQL_HOST')
         HBNB_MYSQL_DB = getenv('HBNB_MYSQL_DB')
         HBNB_ENV = getenv('HBNB_ENV')
-        self.__engine = create_engine('mysql+mysqldb://{}:{}@{}/{}'.
-                                      format(HBNB_MYSQL_USER,
-                                             HBNB_MYSQL_PWD,
-                                             HBNB_MYSQL_HOST,
-                                             HBNB_MYSQL_DB))
+        self.__engine = create_engine(
+            f'mysql+mysqldb://{HBNB_MYSQL_USER}:{HBNB_MYSQL_PWD}@{HBNB_MYSQL_HOST}/{HBNB_MYSQL_DB}'
+        )
         if HBNB_ENV == "test":
             Base.metadata.drop_all(self.__engine)
 
@@ -47,7 +45,7 @@ class DBStorage:
             if cls is None or cls is classes[clss] or cls is clss:
                 objs = self.__session.query(classes[clss]).all()
                 for obj in objs:
-                    key = obj.__class__.__name__ + '.' + obj.id
+                    key = f'{obj.__class__.__name__}.{obj.id}'
                     new_dict[key] = obj
         return (new_dict)
 
@@ -84,11 +82,7 @@ class DBStorage:
             return None
 
         all_cls = models.storage.all(cls)
-        for value in all_cls.values():
-            if (value.id == id):
-                return value
-
-        return None
+        return next((value for value in all_cls.values() if (value.id == id)), None)
 
     def count(self, cls=None):
         """
@@ -96,11 +90,8 @@ class DBStorage:
         """
         all_class = classes.values()
 
-        if not cls:
-            count = 0
-            for clas in all_class:
-                count += len(models.storage.all(clas).values())
-        else:
-            count = len(models.storage.all(cls).values())
-
-        return count
+        return (
+            sum(len(models.storage.all(clas).values()) for clas in all_class)
+            if not cls
+            else len(models.storage.all(cls).values())
+        )
