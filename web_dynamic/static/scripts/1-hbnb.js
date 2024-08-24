@@ -1,22 +1,16 @@
-const $ = window.$;
-$(document).ready(function () {
-  const myAmenities = {};
-  let myList = [];
-  const checkbox = $('.amenities input[type="checkbox"]');
-  checkbox.prop('checked', false);
-  checkbox.change(function () {
-    const dataId = $(this).attr('data-id');
-    const dataName = $(this).attr('data-name');
-    if (this.checked) {
-      myAmenities[dataId] = dataName;
+window.addEventListener('load', function () {
+  // task 2
+  const amenityIds = {};
+  $('input[type=checkbox]').change(function () {
+    if ($(this).prop('checked')) {
+      amenityIds[$(this).attr('data-id')] = $(this).attr('data-name');
+    } else if (!$(this).prop('checked')) {
+      delete amenityIds[$(this).attr('data-id')];
+    }
+    if (Object.keys(amenityIds).length === 0) {
+      $('div.amenities h4').html('&nbsp');
     } else {
-      delete (myAmenities[dataId]);
+      $('div.amenities h4').text(Object.values(amenityIds).join(', '));
     }
-    for (const key in myAmenities) {
-      myList.push(myAmenities[key]);
-    }
-    const output = myList.join(', ');
-    $('div.amenities > h4').text(output);
-    myList = [];
   });
 });

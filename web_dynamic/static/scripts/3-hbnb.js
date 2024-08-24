@@ -1,71 +1,81 @@
-const $ = window.$;
-$(document).ready(function () {
-  const myAmenities = {};
-  let myList = [];
-  const checkbox = $('.amenities input[type="checkbox"]');
-  checkbox.prop('checked', false);
-  checkbox.change(function () {
-    const dataId = $(this).attr('data-id');
-    const dataName = $(this).attr('data-name');
-    if (this.checked) {
-      myAmenities[dataId] = dataName;
-    } else {
-      delete (myAmenities[dataId]);
-    }
-    for (const key in myAmenities) {
-      myList.push(myAmenities[key]);
-    }
-    const output = myList.join(', ');
-    $('div.amenities > h4').text(output);
-    myList = [];
-  });
-  const apiStatus = $('div#api_status');
-  $.ajax('http://0.0.0.0:5001/api/v1/status/').done(function (data) {
+window.addEventListener('load', function () {
+  // task 3
+  $.ajax('http://0.0.0.0:5001/api/v1/status').done(function (data) {
     if (data.status === 'OK') {
-      apiStatus.addClass('available');
+      $('#api_status').addClass('available');
     } else {
-      apiStatus.removeClass('available');
+      $('#api_status').removeClass('available');
     }
   });
-  const placesSearch = $.ajax({
-    url: 'http://0.0.0.0:5001/api/v1/places_search/',
-    dataType: 'json',
-    contentType: 'application/json',
-    method: 'POST',
-    data: JSON.stringify({})
+
+  // task 2
+  const amenityIds = {};
+  $('input[type=checkbox]').click(function () {
+    if ($(this).prop('checked')) {
+      amenityIds[$(this).attr('data-id')] = $(this).attr('data-name');
+    } else if (!$(this).prop('checked')) {
+      delete amenityIds[$(this).attr('data-id')];
+    }
+    if (Object.keys(amenityIds).length === 0) {
+      $('div.amenities h4').html('&nbsp;');
+    } else {
+      $('div.amenities h4').text(Object.values(amenityIds).join(', '));
+    }
   });
-  placesSearch.done(function (data) {
-    for (let i = 0; i < data.length; i++) {
-      /** Prepare data **/
-      const placeName = data[i].name;
-      const priceByNight = data[i].price_by_night;
-      const maxGuest = data[i].max_guest;
-      const maxRooms = data[i].number_rooms;
-      const maxBathrooms = data[i].number_bathrooms;
-      const desc = data[i].description;
-      /** Prepare HTML **/
-      const article = $('<article></article>');
-      const titleBox = $("<div class='title_box'><h2></h2><div class='price_by_night'></div></div>");
-      titleBox.find('> h2').html(placeName);
-      titleBox.find('.price_by_night').html('$' + priceByNight);
-      article.append(titleBox);
-      const information = $("<div class='information'></div>");
-      let guestString = ' Guest';
-      if (maxGuest > 1) { guestString = ' Guests'; }
-      const guest = $("<div class='max_guest'></div>").html(maxGuest + guestString);
-      information.append(guest);
-      let roomString = ' Bedroom';
-      if (maxRooms > 1) { roomString = ' Bedrooms'; }
-      const rooms = $("<div class='number_rooms'></div>").html(maxRooms + roomString);
-      information.append(rooms);
-      let bathString = ' Bathroom';
-      if (maxBathrooms > 1) { bathString = ' Bathrooms'; }
-      const bathrooms = $("<div class='number_bathrooms'></div>").html(maxBathrooms + bathString);
-      information.append(bathrooms);
-      article.append(information);
-      const description = $("<div class='description'></div>").html(desc);
-      article.append(description);
-      $('section.places').append(article);
+
+  // task 4
+  $.ajax({
+    type: 'POST',
+    url: 'http://0.0.0.0:5001/api/v1/places_search/',
+    contentType: 'application/json',
+    data: JSON.stringify({})
+  }).done(function (data) {
+    for (const place of data) {
+      const template = `<article>
+
+        <div class="title">
+
+          <h2>${place.name}</h2>
+
+          <div class="price_by_night">
+
+        $${place.price_by_night}
+
+          </div>
+        </div>
+        <div class="information">
+          <div class="max_guest">
+        <i class="fa fa-users fa-3x" aria-hidden="true"></i>
+
+        <br />
+
+        ${place.max_guest} Guests
+
+          </div>
+          <div class="number_rooms">
+        <i class="fa fa-bed fa-3x" aria-hidden="true"></i>
+
+        <br />
+
+        ${place.number_rooms} Bedrooms
+          </div>
+          <div class="number_bathrooms">
+        <i class="fa fa-bath fa-3x" aria-hidden="true"></i>
+
+        <br />
+
+        ${place.number_bathrooms} Bathroom
+
+          </div>
+        </div>
+        <div class="description">
+
+          ${place.description}
+
+        </div>
+
+      </article> <!-- End 1 PLACE Article -->`;
+      $('section.places').append(template);
     }
   });
 });
